@@ -57,10 +57,10 @@ const Shop = () => {
     dispatch(setProducts(productsByBrand));
   };
 
-  const handleCheck = (value, id) => {
-    const updatedChecked = value
-      ? [...checked, id]
-      : checked.filter((c) => c !== id);
+  const handleCheck = (e, id) => {
+    const value = e.target.checked;
+    const updatedChecked = value ? [...checked, id] : checked.filter((c) => c !== id);
+    console.log(updatedChecked);
     dispatch(setChecked(updatedChecked));
   };
 
@@ -84,7 +84,7 @@ const Shop = () => {
     <>
       <div className="container mx-auto">
         <div className="flex md:flex-row">
-          <div className="bg-[#151515] p-3 mt-2 mb-2">
+          <div className="bg-[#151515] ml-12 p-3 mt-2 mb-2">
             <h2 className="h4 text-center py-2 bg-black rounded-full mb-2">
               Filter by Categories
             </h2>
@@ -96,7 +96,7 @@ const Shop = () => {
                     <input
                       type="checkbox"
                       id="red-checkbox"
-                      onChange={(e) => handleCheck(e.target.checked, c._id)}
+                      onChange={(e) => handleCheck(e, c._id)}
                       className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 dark:focus:ring-pink-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     />
 

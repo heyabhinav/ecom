@@ -6,6 +6,9 @@ import { useRegisterMutation } from "../../redux/api/usersApiSlice";
 import { setCredentials } from "../../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
 
+import {getAuth, createUserWithEmailAndPassword} from "firebase/auth";
+import { app } from "./firebase";
+
 const Register = () => {
   const [username, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -36,6 +39,8 @@ const Register = () => {
       toast.error("Passwords do not match");
     } else {
       try {
+        const fireBaseRes = await createUserWithEmailAndPassword(getAuth(app), email, password);
+        console.log(fireBaseRes);
         const res = await register({ username, email, password }).unwrap();
         dispatch(setCredentials({ ...res }));
         navigate(redirect);
@@ -147,7 +152,7 @@ const Register = () => {
       <img
         src="https://images.unsplash.com/photo-1576502200916-3808e07386a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2065&q=80"
         alt=""
-        className="h-[65rem] w-[59%] xl:block md:hidden sm:hidden rounded-lg"
+        className="h-[45rem] w-[45%] xl:block md:hidden sm:hidden rounded-lg"
       />
     </section>
   );

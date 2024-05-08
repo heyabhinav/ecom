@@ -38,6 +38,8 @@ const ProductList = () => {
       productData.append("brand", brand);
       productData.append("countInStock", stock);
 
+      console.log([...productData.entries()]);
+
       const { data } = await createProduct(productData);
 
       if (data.error) {
@@ -51,6 +53,12 @@ const ProductList = () => {
       toast.error("Product create failed. Try Again.");
     }
   };
+
+  const handleCategoryChange = (e) => {
+    console.log("Selected category:", e.target.value);
+    setCategory(e.target.value);
+  };
+ 
 
   const uploadFileHandler = async (e) => {
     const formData = new FormData();
@@ -165,7 +173,8 @@ const ProductList = () => {
                 <select
                   placeholder="Choose Category"
                   className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white"
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={handleCategoryChange}
+                  value={category}
                 >
                   {categories?.map((c) => (
                     <option key={c._id} value={c._id}>
