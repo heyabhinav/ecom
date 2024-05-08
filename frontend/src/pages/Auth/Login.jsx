@@ -6,6 +6,9 @@ import { useLoginMutation } from "../../redux/api/usersApiSlice";
 import { setCredentials } from "../../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
 
+import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
+import { app } from "./firebase";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,6 +33,9 @@ const Login = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
+      console.log("something");
+      const fireBaseRes = await signInWithEmailAndPassword(getAuth(app), email, password);
+      console.log(fireBaseRes);
       const res = await login({ email, password }).unwrap();
       console.log(res);
       dispatch(setCredentials({ ...res }));
