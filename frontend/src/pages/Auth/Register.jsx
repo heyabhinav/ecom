@@ -6,8 +6,15 @@ import { useRegisterMutation } from "../../redux/api/usersApiSlice";
 import { setCredentials } from "../../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
 
-import {getAuth, createUserWithEmailAndPassword} from "firebase/auth";
+import {
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup
+} from "firebase/auth";
 import { app } from "./firebase";
+
+const provider = new GoogleAuthProvider();
 
 const Register = () => {
   const [username, setName] = useState("");
@@ -51,6 +58,17 @@ const Register = () => {
       }
     }
   };
+
+  const signInWithGoogle = async () => {
+    const fireBaseRes = await signInWithPopup(getAuth(app), provider);
+    const username = fireBaseRes.user.displayName;
+    const email = fireBaseRes.user.email;
+    const password = fireBaseRes.user.uid;
+    const res = await register({ username, email, password }).unwrap();
+    dispatch(setCredentials({ ...res }));
+    navigate(redirect);
+    toast.success("User successfully registered");
+  }
 
   return (
     <section className="pl-[10rem] flex flex-wrap">
@@ -132,6 +150,13 @@ const Register = () => {
             className="bg-pink-500 text-white px-4 py-2 rounded cursor-pointer my-[1rem]"
           >
             {isLoading ? "Registering..." : "Register"}
+          </button>
+          <br></br>
+          <button
+            onClick={signInWithGoogle}
+            className="bg-pink-500 text-white px-4 py-2 rounded cursor-pointer my-[1rem]"
+          >
+            Sign In with Google
           </button>
 
           {isLoading && <Loader />}

@@ -6,8 +6,15 @@ import { useLoginMutation } from "../../redux/api/usersApiSlice";
 import { setCredentials } from "../../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
 
-import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
+import {
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup
+} from "firebase/auth";
 import { app } from "./firebase";
+
+const provider = new GoogleAuthProvider();
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -43,6 +50,17 @@ const Login = () => {
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
+  };
+
+  const signInWithGoogle = async () => {
+    const fireBaseRes = await signInWithPopup(getAuth(app), provider);
+    const username = fireBaseRes.user.displayName;
+    const email = fireBaseRes.user.email;
+    const password = fireBaseRes.user.uid;
+    const res = await await login({ email, password }).unwrap();
+    dispatch(setCredentials({ ...res }));
+    navigate(redirect);
+    toast.success("User successfully registered");
   };
 
   return (
@@ -92,6 +110,13 @@ const Login = () => {
               className="bg-pink-500 text-white px-4 py-2 rounded cursor-pointer my-[1rem]"
             >
               {isLoading ? "Signing In..." : "Sign In"}
+            </button>
+            <br></br>
+            <button
+              onClick={signInWithGoogle}
+              className="bg-pink-500 text-white px-4 py-2 rounded cursor-pointer my-[1rem]"
+            >
+              Sign In with Google
             </button>
 
             {isLoading && <Loader />}
